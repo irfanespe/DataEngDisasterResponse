@@ -143,10 +143,27 @@ def evaluate_model(model, X_test, Y_test, category_names):
     y_pred_test = model.predict(X_test)
 
     test_prec_list, test_rec_list, test_f1_list =  make_prediction_report(Y_test, y_pred_test)
-
+    
+    categories = list(Y_test.columns)
+    
+    # make dataframe for each category report value
+    cat_name = pd.DataFrame(categories, columns = ['category_name'])
+    pre_cat = pd.DataFrame(test_prec_list, columns = ['precision'])
+    rec_cat = pd.DataFrame(test_rec_list, columns = ['recall'])
+    f1_cat = pd.DataFrame(test_f1_list, columns = ['f1_score'])
+    
+    cat_name = cat_name.join([pre_cat])
+    cat_name = cat_name.join([rec_cat])
+    cat_name = cat_name.join([f1_cat])
+    
+    print('performance recap for all categories')
+    print(cat_name)
+    
+    print()
+    # print overall / average precision, recall and f1 score of all categories
     print('average value for all parameters')
     print('average precision : {}'.format(mean(test_prec_list)))
-    print('average reacall : {}'.format(mean(test_rec_list)))
+    print('average recall : {}'.format(mean(test_rec_list)))
     print('average f1-score : {}'.format(mean(test_f1_list)))
 
     print('best parameter :')
